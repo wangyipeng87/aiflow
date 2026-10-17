@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>Demo - 只读/可编辑</title>
+<link href="../Content/css/aiflow.css" rel="stylesheet"/>
+<script src="../Content/es6/raphael.min.js"></script>
+<script src="../Content/es6/aiflow-router.js"></script>
+<script type="module" src="../Content/es6/index.js"></script>
+<style>.demo-panel{position:fixed;top:10px;right:60px;z-index:999;background:#fff;padding:12px 16px;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.15);font-size:13px;max-width:320px;} .demo-panel h4{margin:0 0 8px;font-size:14px;color:#1890ff;} .demo-btn{padding:6px 14px;background:#1890ff;color:#fff;border:none;border-radius:4px;cursor:pointer;margin:4px 2px;} .demo-btn:hover{background:#40a9ff;} #status{margin-top:8px;font-weight:bold;}</style>
+</head>
+<body>
+<div id="aiflow-page"></div>
+<div class="demo-panel">
+  <h4>只读/可编辑 Demo</h4>
+  <button class="demo-btn" id="btn-readonly">设为只读</button>
+  <button class="demo-btn" id="btn-editable">设为可编辑</button>
+  <div id="status">当前状态: 可编辑</div>
+</div>
+<script type="module">
+import { AiFlow } from '../Content/es6/index.js';
+
+var designer = AiFlow.init(document.getElementById('aiflow-page'), { title: '只读模式Demo' });
+  designer.addNode('start', 200, 100);
+  designer.addNode('userTask', 200, 250, { name: '审批任务' });
+
+  document.getElementById('btn-readonly').addEventListener('click', function(){
+    designer.setReadonly(true);
+    var s = document.getElementById('status');
+    s.textContent = '当前状态: 只读';
+    s.style.color = '#f5222d';
+  });
+  document.getElementById('btn-editable').addEventListener('click', function(){
+    designer.setReadonly(false);
+    var s = document.getElementById('status');
+    s.textContent = '当前状态: 可编辑';
+    s.style.color = '#52c41a';
+  });
+</script>
+</body>
+</html>

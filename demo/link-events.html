@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>Demo - 连线事件</title>
+<link href="../Content/css/aiflow.css" rel="stylesheet"/>
+<script src="../Content/es6/raphael.min.js"></script>
+<script src="../Content/es6/aiflow-router.js"></script>
+<script type="module" src="../Content/es6/index.js"></script>
+<style>.demo-panel{position:fixed;top:10px;right:60px;z-index:999;background:#fff;padding:12px 16px;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.15);font-size:13px;max-width:380px;} .demo-panel h4{margin:0 0 8px;font-size:14px;color:#1890ff;} #event-log{max-height:250px;overflow-y:auto;background:#f5f5f5;padding:8px;border-radius:4px;font-size:11px;margin-top:8px;} .log-item{padding:2px 0;border-bottom:1px solid #eee;}</style>
+</head>
+<body>
+<div id="aiflow-page"></div>
+<div class="demo-panel">
+  <h4>连线事件 Demo</h4>
+  <p>创建连线（从锚点拖到锚点）、右键删除连线，观察事件日志。</p>
+  <div id="event-log"></div>
+</div>
+<script type="module">
+import { AiFlow } from '../Content/es6/index.js';
+
+function log(msg){
+    document.getElementById('event-log').insertAdjacentHTML('afterbegin', '<div class="log-item">' + new Date().toLocaleTimeString() + ' - ' + msg + '</div>');
+  }
+  var designer = AiFlow.init(document.getElementById('aiflow-page'), {
+    title: '连线事件Demo',
+    events: {
+      onLinkCreated: function(d){ log('<b>连线创建</b> ID:' + d.id.substr(0,8) + ' 起始:' + d.startNodeId.substr(0,8) + ' 结束:' + d.endNodeId.substr(0,8)); },
+      onLinkDeleted: function(d){ log('<b style="color:#f5222d">连线删除</b> ID:' + d.id.substr(0,8)); },
+      onContextMenuClick: function(d){ log('<b style="color:#fa8c16">菜单点击</b> ' + d.menuName); }
+    }
+  });
+  designer.addNode('start', 250, 100);
+  designer.addNode('userTask', 230, 300, { name: '审批任务' });
+  designer.addNode('end', 250, 480);
+</script>
+</body>
+</html>

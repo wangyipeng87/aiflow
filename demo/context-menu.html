@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>Demo - 右键菜单</title>
+<link href="../Content/css/aiflow.css" rel="stylesheet"/>
+<script src="../Content/es6/raphael.min.js"></script>
+<script src="../Content/es6/aiflow-router.js"></script>
+<script type="module" src="../Content/es6/index.js"></script>
+<style>
+.demo-panel{position:fixed;top:10px;right:60px;z-index:999;background:#fff;padding:12px 16px;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.15);font-size:13px;max-width:380px;}
+.demo-panel h4{margin:0 0 8px;font-size:14px;color:#1890ff;}
+#event-log{max-height:200px;overflow-y:auto;background:#f5f5f5;padding:8px;border-radius:4px;font-size:11px;margin-top:8px;}
+.log-item{padding:2px 0;border-bottom:1px solid #eee;}
+</style>
+</head>
+<body>
+<div id="aiflow-page"></div>
+<div class="demo-panel">
+  <h4>右键菜单 Demo</h4>
+  <p><b>节点</b>上右键：编辑节点 / 查看详情 / 删除</p>
+  <p><b>连线</b>上右键：设置条件（修改备注）/ 查看信息 / 删除</p>
+  <div id="event-log"></div>
+</div>
+<script type="module">
+import { AiFlow } from '../Content/es6/index.js';
+
+function log(msg){
+  document.getElementById('event-log').insertAdjacentHTML('afterbegin',
+    '<div class="log-item">' + new Date().toLocaleTimeString() + ' - ' + msg + '</div>');
+}
+
+var designer = AiFlow.init(document.getElementById('aiflow-page'), {
+  title: '右键菜单Demo',
+  events: {
+    onContextMenuClick: function(d){
+      log('<b style="color:#fa8c16">菜单点击</b> ' + d.menuName +
+          '（目标: ' + (d.targetType === 'link' ? '连线' : d.targetType) + ' ' + d.targetId.substr(0,8) + '）');
+    }
+  }
+});
+
+// 创建节点与连线
+var n1 = designer.addNode('start', 250, 100);
+var n2 = designer.addNode('userTask', 230, 280, { name: '审批' });
+var n3 = designer.addNode('gateway', 250, 470, { name: '判断' });
+designer._addLink(n1.id, 'bottom', n2.id, 'top');
+designer._addLink(n2.id, 'bottom', n3.id, 'top');
+
+// 节点右键菜单
+designer.setNodeContextMenu([
+  { name: '编辑节点', action: 'edit', callback: function(node) {
+    var txt = prompt('修改节点名称:', node.name);
+    if (txt !== null) node.setName(txt);
+  }},
+  { name: '查看详情', action: 'detail', callback: function(node) {
+    alert('节点ID: ' + node.id + '\n名称: ' + node.name + '\n类型: ' + node.type);
+  }},
+  { name: '删除', action: 'delete' }
+]);
+
+// 连线右键菜单
+designer.setLinkContextMenu([
+  { name: '设置条件', action: 'condition', callback: function(link) {
+    var txt = prompt('请输入条件说明:', link.remark || '');
+    if (txt !== null) link.setRemark(txt);
+  }},
+  { name: '查看信息', action: 'info', callback: function(link) {
+    alert('连线ID: ' + link.id + '\n起始: ' + link.startNodeId.substr(0,8) + '\n终止: ' + link.endNodeId.substr(0,8));
+  }},
+  { name: '删除', action: 'delete' }
+]);
+
+log('右键点击节点或连线试试');
+</script>
+</body>
+</html>

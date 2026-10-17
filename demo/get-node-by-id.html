@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>Demo - 根据ID获取节点</title>
+<link href="../Content/css/aiflow.css" rel="stylesheet"/>
+<script src="../Content/es6/raphael.min.js"></script>
+<script src="../Content/es6/aiflow-router.js"></script>
+<script type="module" src="../Content/es6/index.js"></script>
+<style>.demo-panel{position:fixed;top:10px;right:60px;z-index:999;background:#fff;padding:12px 16px;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.15);font-size:13px;max-width:360px;} .demo-panel h4{margin:0 0 8px;font-size:14px;color:#1890ff;} .demo-btn{padding:6px 14px;background:#1890ff;color:#fff;border:none;border-radius:4px;cursor:pointer;margin:4px 2px;} .demo-btn:hover{background:#40a9ff;} #result{margin-top:8px;background:#f5f5f5;padding:8px;border-radius:4px;font-size:12px;white-space:pre;}</style>
+</head>
+<body>
+<div id="aiflow-page"></div>
+<div class="demo-panel">
+  <h4>根据ID获取节点 Demo</h4>
+  <p>点击按钮获取第一个节点的信息。</p>
+  <button class="demo-btn" id="btn-get">获取节点</button>
+  <div id="result"></div>
+</div>
+<script type="module">
+import { AiFlow } from '../Content/es6/index.js';
+
+var designer = AiFlow.init(document.getElementById('aiflow-page'), { title: '获取节点Demo' });
+  var node = designer.addNode('userTask', 250, 200, { name: '审批节点' });
+
+  document.getElementById('btn-get').addEventListener('click', function(){
+    var n = designer.getNodeById(node.id);
+    if (n) {
+      document.getElementById('result').textContent = 'ID: ' + n.id + '\n类型: ' + n.type + '\n名称: ' + n.name + '\n位置: (' + Math.round(n.x) + ', ' + Math.round(n.y) + ')';
+    } else {
+      document.getElementById('result').textContent = '未找到节点';
+    }
+  });
+</script>
+</body>
+</html>

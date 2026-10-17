@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>Demo - 初始化</title>
+<link href="../Content/css/aiflow.css" rel="stylesheet"/>
+<script src="../Content/es6/raphael.min.js"></script>
+<script src="../Content/es6/aiflow-router.js"></script>
+<script type="module" src="../Content/es6/index.js"></script>
+<style>.demo-panel{position:fixed;top:10px;right:60px;z-index:999;background:#fff;padding:12px 16px;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.15);font-size:13px;max-width:320px;} .demo-panel h4{margin:0 0 8px;font-size:14px;color:#1890ff;} .demo-panel code{display:block;background:#f5f5f5;padding:8px;border-radius:4px;white-space:pre;font-size:12px;margin-top:6px;}</style>
+</head>
+<body>
+<div id="aiflow-page"></div>
+<div class="demo-panel">
+  <h4>初始化 Demo</h4>
+  <p>基础初始化，从工具栏拖拽节点到画布创建节点，在锚点间拖拽创建连线。</p>
+  <code>AiFlow.init(document.getElementById('aiflow-page'), {
+  title: '初始化Demo',
+  events: {
+    onNodeCreated: function(d) {
+      console.log('创建:', d);
+    }
+  }
+});</code>
+</div>
+<script type="module">
+import { AiFlow } from '../Content/es6/index.js';
+
+var designer = AiFlow.init(document.getElementById('aiflow-page'), {
+    title: '初始化Demo',
+    events: {
+      onNodeCreated: function(d){ console.log('节点创建:', d); },
+      onLinkCreated: function(d){ console.log('连线创建:', d); }
+    }
+  });
+</script>
+</body>
+</html>

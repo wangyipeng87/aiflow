@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>Demo - 导入JSON</title>
+<link href="../Content/css/aiflow.css" rel="stylesheet"/>
+<script src="../Content/es6/raphael.min.js"></script>
+<script src="../Content/es6/aiflow-router.js"></script>
+<script type="module" src="../Content/es6/index.js"></script>
+<style>.demo-panel{position:fixed;top:10px;right:60px;z-index:999;background:#fff;padding:12px 16px;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.15);font-size:13px;max-width:360px;} .demo-panel h4{margin:0 0 8px;font-size:14px;color:#1890ff;} .demo-btn{padding:6px 14px;background:#1890ff;color:#fff;border:none;border-radius:4px;cursor:pointer;margin:4px 2px;} .demo-btn:hover{background:#40a9ff;}</style>
+</head>
+<body>
+<div id="aiflow-page"></div>
+<div class="demo-panel">
+  <h4>导入 JSON Demo</h4>
+  <p>点击按钮导入预设的流程数据。</p>
+  <button class="demo-btn" id="btn-import">导入示例JSON</button>
+  <button class="demo-btn" id="btn-clear">清空画布</button>
+</div>
+<script type="module">
+import { AiFlow } from '../Content/es6/index.js';
+
+var designer = AiFlow.init(document.getElementById('aiflow-page'), { title: '导入JSON Demo' });
+  var sampleData = {
+    nodes: [
+      { id: 'n1', type: 'start', name: '开始', x: 200, y: 80 },
+      { id: 'n2', type: 'userTask', name: '提交申请', x: 170, y: 220 },
+      { id: 'n3', type: 'gateway', name: '判断', x: 200, y: 370 },
+      { id: 'n4', type: 'systemTask', name: '系统处理', x: 400, y: 350 },
+      { id: 'n5', type: 'end', name: '结束', x: 200, y: 500 }
+    ],
+    links: [
+      { startNodeId: 'n1', startAnchorPos: 'bottom', endNodeId: 'n2', endAnchorPos: 'top', remark: '' },
+      { startNodeId: 'n2', startAnchorPos: 'bottom', endNodeId: 'n3', endAnchorPos: 'top', remark: '' },
+      { startNodeId: 'n3', startAnchorPos: 'right', endNodeId: 'n4', endAnchorPos: 'left', remark: '金额>100' },
+      { startNodeId: 'n3', startAnchorPos: 'bottom', endNodeId: 'n5', endAnchorPos: 'top', remark: '金额<=100' }
+    ]
+  };
+  document.getElementById('btn-import').addEventListener('click', function(){ designer.importJSON(sampleData); });
+  document.getElementById('btn-clear').addEventListener('click', function(){ designer.importJSON({ nodes: [], links: [] }); });
+</script>
+</body>
+</html>

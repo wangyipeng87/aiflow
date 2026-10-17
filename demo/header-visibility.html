@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>Demo - 头部显示/隐藏</title>
+<link href="../Content/css/aiflow.css" rel="stylesheet"/>
+<script src="../Content/es6/raphael.min.js"></script>
+<script src="../Content/es6/aiflow-router.js"></script>
+<script type="module" src="../Content/es6/index.js"></script>
+<style>.demo-panel{position:fixed;top:10px;right:60px;z-index:999;background:#fff;padding:12px 16px;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.15);font-size:13px;max-width:320px;} .demo-panel h4{margin:0 0 8px;font-size:14px;color:#1890ff;} .demo-btn{padding:6px 14px;background:#1890ff;color:#fff;border:none;border-radius:4px;cursor:pointer;margin:4px 2px;} .demo-btn:hover{background:#40a9ff;} #status{margin-top:8px;font-weight:bold;}</style>
+</head>
+<body>
+<div id="aiflow-page"></div>
+<div class="demo-panel">
+  <h4>头部显示/隐藏 Demo</h4>
+  <p>隐藏/显示标题栏整行（标题 + 撤销/重做/导入/导出按钮）。</p>
+  <button class="demo-btn" id="btn-hide">隐藏头部</button>
+  <button class="demo-btn" id="btn-show">显示头部</button>
+  <div id="status">当前状态: 显示</div>
+  <p style="margin-top:8px;color:#888;font-size:12px;">提示：头部隐藏后 Ctrl+Z / Ctrl+Y 快捷键仍然生效。</p>
+</div>
+<script type="module">
+import { AiFlow } from '../Content/es6/index.js';
+
+var designer = AiFlow.init(document.getElementById('aiflow-page'), { title: '头部显示/隐藏Demo' });
+  designer.addNode('start', 200, 100);
+  designer.addNode('userTask', 200, 250, { name: '审批任务' });
+
+  document.getElementById('btn-hide').addEventListener('click', function(){
+    designer.hideHeader();
+    updateStatus();
+  });
+  document.getElementById('btn-show').addEventListener('click', function(){
+    designer.showHeader();
+    updateStatus();
+  });
+
+  function updateStatus(){
+    var s = document.getElementById('status');
+    var visible = designer.isHeaderVisible();
+    s.textContent = '当前状态: ' + (visible ? '显示' : '隐藏');
+    s.style.color = visible ? '#52c41a' : '#f5222d';
+  }
+</script>
+</body>
+</html>

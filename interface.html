@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>AiFlow 流程设计器 - 接口文档</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; color: #333; background: #f7f8fa; line-height: 1.7; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 32px 24px 60px; }
+  h1 { font-size: 28px; text-align: center; margin-bottom: 8px; }
+  .subtitle { text-align: center; color: #888; margin-bottom: 32px; font-size: 14px; }
+  h2 { font-size: 20px; color: #1890ff; border-left: 4px solid #1890ff; padding-left: 12px; margin: 32px 0 16px; }
+  h3 { font-size: 16px; margin: 20px 0 8px; color: #333; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 16px; font-size: 13px; }
+  th, td { border: 1px solid #e8e8e8; padding: 8px 12px; text-align: left; }
+  th { background: #fafafa; font-weight: 600; }
+  code { background: #f0f0f0; padding: 1px 6px; border-radius: 3px; font-size: 13px; }
+  pre { background: #282c34; color: #abb2bf; padding: 16px; border-radius: 6px; overflow-x: auto; font-size: 13px; line-height: 1.5; margin: 8px 0 16px; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; color: #fff; margin-right: 4px; }
+  .tag-method { background: #52c41a; }
+  .tag-event { background: #fa8c16; }
+  .tag-prop { background: #1890ff; }
+  .demo-link { color: #1890ff; text-decoration: none; font-size: 13px; }
+  .demo-link:hover { text-decoration: underline; }
+  .toc { background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 16px 24px; margin-bottom: 24px; }
+  .toc ul { list-style: none; padding-left: 16px; }
+  .toc a { color: #1890ff; text-decoration: none; font-size: 14px; line-height: 2; }
+  .toc a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>AiFlow 流程设计器 - 接口文档</h1>
+<p class="subtitle">版本 1.0 &nbsp;|&nbsp; 基于 ES6 原生 + Raphael（无 jQuery 依赖）</p>
+
+<div class="toc">
+<strong>目录</strong>
+<ul>
+  <li><a href="#init">一、初始化</a></li>
+  <li><a href="#designer-api">二、设计器接口</a></li>
+  <li><a href="#node-api">三、节点接口</a></li>
+  <li><a href="#link-api">四、连线接口</a></li>
+  <li><a href="#events">五、事件</a></li>
+  <li><a href="#data-format">六、数据格式</a></li>
+</ul>
+</div>
+
+<!-- ═══════ 一、初始化 ═══════ -->
+<h2 id="init">一、初始化</h2>
+
+<h3>AiFlow.init(container, options)</h3>
+<p>在指定容器上初始化流程设计器，返回设计器实例对象。</p>
+
+<pre>var designer = AiFlow.init(document.getElementById('aiflow-page'), {
+  title: '我的流程',
+  readonly: false,
+  events: {
+    onNodeCreated: function(data) { console.log(data); },
+    onNodeDeleted: function(data) { console.log(data); },
+    onLinkCreated: function(data) { console.log(data); },
+    onLinkDeleted: function(data) { console.log(data); },
+    onContextMenuClick: function(data) { console.log(data); }
+  }
+});</pre>
+
+<p><a class="demo-link" href="demo/init.html">→ 查看 Demo</a></p>
+
+<table>
+<tr><th>参数</th><th>类型</th><th>说明</th></tr>
+<tr><td>title</td><td>String</td><td>设计器标题，默认"流程设计器"</td></tr>
+<tr><td>readonly</td><td>Boolean</td><td>是否只读模式，默认 false</td></tr>
+<tr><td>header</td><td>Object</td><td>头部配置 {visible}，visible 为 false 时初始隐藏头部整行</td></tr>
+<tr><td>toolbar</td><td>Object</td><td>左侧工具栏配置 {visible}，visible 为 false 时初始隐藏工具栏</td></tr>
+<tr><td>canvas</td><td>Object</td><td>画布配置 {width, height, minWidth, minHeight}</td></tr>
+<tr><td>zoom</td><td>Object</td><td>缩放配置 {min, max, step, default}</td></tr>
+<tr><td>nodeTypes</td><td>Object</td><td>覆盖节点类型默认样式</td></tr>
+<tr><td>anchor</td><td>Object</td><td>覆盖锚点默认样式</td></tr>
+<tr><td>link</td><td>Object</td><td>覆盖连线默认样式</td></tr>
+<tr><td>contextMenu</td><td>Object</td><td>覆盖默认右键菜单</td></tr>
+<tr><td>events</td><td>Object</td><td>事件回调函数，见"五、事件"</td></tr>
+</table>
+
+<!-- ═══════ 二、设计器接口 ═══════ -->
+<h2 id="designer-api">二、设计器接口</h2>
+
+<h3><span class="tag tag-method">方法</span> designer.exportJSON()</h3>
+<p>导出画布内容为 JSON 对象。</p>
+<pre>var json = designer.exportJSON();
+console.log(JSON.stringify(json, null, 2));</pre>
+<p><a class="demo-link" href="demo/export-json.html">→ 查看 Demo</a></p>
+
+<h3><span class="tag tag-method">方法</span> designer.importJSON(json)</h3>
+<p>导入 JSON 数据，恢复画布内容。会清除当前画布上所有元素。</p>
+<pre>designer.importJSON({
+  nodes: [...],
+  links: [...]
+});</pre>
+<p><a class="demo-link" href="demo/import-json.html">→ 查看 Demo</a></p>
+
+<h3><span class="tag tag-method">方法</span> designer.setReadonly(boolean)</h3>
+<p>设置设计器为只读模式。只读状态下：右键菜单隐藏删除项、不能复制节点、不能拖动连线、不能按Delete键删除。</p>
+<pre>designer.setReadonly(true);  // 只读
+designer.setReadonly(false); // 可编辑</pre>
+<p><a class="demo-link" href="demo/readonly.html">→ 查看 Demo</a></p>
+
+<h3><span class="tag tag-method">方法</span> designer.setEditable()</h3>
+<p>设置设计器为可编辑模式，等同于 <code>setReadonly(false)</code>。</p>
+
+<h3><span class="tag tag-method">方法</span> designer.setTitle(text)</h3>
+<p>设置设计器标题。</p>
+<pre>designer.setTitle('审批流程设计');</pre>
+<p><a class="demo-link" href="demo/set-title.html">→ 查看 Demo</a></p>
+
+<h3><span class="tag tag-method">方法</span> designer.showHeader() / designer.hideHeader() / designer.isHeaderVisible()</h3>
+<p>显示 / 隐藏设计器头部（标题 + 撤销、重做、导入、导出按钮整行）。隐藏后画布主区域自动撑满；头部隐藏期间撤销/重做等快捷键（Ctrl+Z / Ctrl+Y）仍然生效。<code>isHeaderVisible()</code> 返回当前头部是否可见。</p>
+<pre>designer.hideHeader();       // 隐藏头部
+designer.showHeader();       // 显示头部
+designer.isHeaderVisible();  // → true / false</pre>
+<p>也可在初始化配置中直接隐藏：<code>AiFlow.init(el, { header: { visible: false } })</code></p>
+<p><a class="demo-link" href="demo/header-visibility.html">→ 查看 Demo</a></p>
+
+<h3><span class="tag tag-method">方法</span> designer.showToolbar() / designer.hideToolbar() / designer.isToolbarVisible()</h3>
+<p>显示 / 隐藏左侧工具栏（节点面板）。隐藏后画布区域自动撑满，已有节点与连线不受影响；重新显示后可继续从工具栏拖拽创建节点。<code>isToolbarVisible()</code> 返回当前工具栏是否可见。</p>
+<pre>designer.hideToolbar();       // 隐藏工具栏
+designer.showToolbar();       // 显示工具栏
+designer.isToolbarVisible();  // → true / false</pre>
+<p>也可在初始化配置中直接隐藏：<code>AiFlow.init(el, { toolbar: { visible: false } })</code></p>
+<p><a class="demo-link" href="demo/toolbar-visibility.html">→ 查看 Demo</a></p>
+
+<h3><span class="tag tag-method">方法</span> designer.getNodeById(id)</h3>
+<p>根据节点ID获取节点对象。</p>
+<pre>var node = designer.getNodeById('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx');</pre>
+<p><a class="demo-link" href="demo/get-node-by-id.html">→ 查看 Demo</a></p>
+
+<h3><span class="tag tag-method">方法</span> designer.getLinkById(id)</h3>
+<p>根据连线ID获取连线对象。</p>
+<pre>var link = designer.getLinkById('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx');</pre>
+<p><a class="demo-link" href="demo/get-link-by-id.html">→ 查看 Demo</a></p>
+
+<h3><span class="tag tag-method">方法</span> designer.setNodeContextMenu(items)</h3>
+<p>自定义节点右键菜单。</p>
+<pre>designer.setNodeContextMenu([
+  { name: '编辑', action: 'edit', callback: function(node) { alert(node.id); } },
+  { name: '删除', action: 'delete' }
+]);</pre>
+<p><a class="demo-link" href="demo/node-context-menu.html">→ 节点右键菜单 Demo</a> &nbsp;|&nbsp;
+<a class="demo-link" href="demo/context-menu.html">→ 综合右键菜单 Demo</a></p>
+
+<h3><span class="tag tag-method">方法</span> designer.setLinkContextMenu(items)</h3>
+<p>自定义连线右键菜单。</p>
+<pre>designer.setLinkContextMenu([
+  { name: '设置条件', action: 'condition', callback: function(link) { /* ... */ } },
+  { name: '删除', action: 'delete' }
+]);</pre>
+<p><a class="demo-link" href="demo/link-context-menu.html">→ 连线右键菜单 Demo</a> &nbsp;|&nbsp;
+<a class="demo-link" href="demo/context-menu.html">→ 综合右键菜单 Demo</a></p>
+
+<h3><span class="tag tag-method">方法</span> designer.exportPNG(callback)</h3>
+<p>导出画布为 PNG 图片。如传入 callback 则回调返回 dataURL，否则自动下载。</p>
+<pre>designer.exportPNG(function(dataURL) {
+  var img = new Image();
+  img.src = dataURL;
+  document.body.appendChild(img);
+});</pre>
+<p><a class="demo-link" href="demo/export-png.html">→ 查看 Demo</a></p>
+
+<h3><span class="tag tag-method">方法</span> designer.addNode(type, x, y, extra)</h3>
+<p>通过接口创建节点。type 为 <code>start / end / userTask / systemTask / gateway</code>。返回节点对象。</p>
+<pre>var node = designer.addNode('userTask', 200, 150, { name: '审批' });</pre>
+
+<!-- ═══════ 三、节点接口 ═══════ -->
+<h2 id="node-api">三、节点接口</h2>
+
+<h3><span class="tag tag-prop">属性</span> node.id / node.type / node.name / node.x / node.y</h3>
+<p>节点的基本属性，均可读取。</p>
+
+<h3><span class="tag tag-method">方法</span> node.setName(name)</h3>
+<p>修改节点名称。</p>
+<pre>node.setName('财务审核');</pre>
+<p><a class="demo-link" href="demo/node-set-name.html">→ 查看 Demo</a></p>
+
+<h3><span class="tag tag-method">方法</span> node.setStyle(style)</h3>
+<p>修改单个节点样式，优先级高于设计器统一配置。</p>
+<pre>node.setStyle({
+  fill: '#ffe58f',
+  stroke: '#faad14',
+  textStyle: { fill: '#000', 'font-size': '14px' }
+});</pre>
+<p><a class="demo-link" href="demo/node-style.html">→ 查看 Demo</a></p>
+
+<h3><span class="tag tag-method">方法</span> node.setReadonly(boolean)</h3>
+<p>设置单个节点为只读/可编辑。</p>
+<pre>node.setReadonly(true);</pre>
+
+<h3><span class="tag tag-method">方法</span> node.setContextMenu(items)</h3>
+<p>自定义单个节点的右键菜单，优先级高于设计器统一配置。</p>
+<pre>node.setContextMenu([
+  { name: '查看详情', action: 'detail', callback: function(n) { alert(n.name); } },
+  { name: '删除', action: 'delete' }
+]);</pre>
+
+<h3><span class="tag tag-method">方法</span> node.delete()</h3>
+<p>删除节点及其所有关联连线。</p>
+<pre>node.delete();</pre>
+
+<!-- ═══════ 四、连线接口 ═══════ -->
+<h2 id="link-api">四、连线接口</h2>
+
+<h3><span class="tag tag-prop">属性</span> link.id / link.startNodeId / link.endNodeId / link.remark</h3>
+<p>连线的基本属性，均可读取。</p>
+
+<h3><span class="tag tag-method">方法</span> link.setRemark(text)</h3>
+<p>修改连线的备注文本。</p>
+<pre>link.setRemark('金额>100元');</pre>
+<p><a class="demo-link" href="demo/link-set-remark.html">→ 查看 Demo</a></p>
+
+<h3><span class="tag tag-method">方法</span> link.setStyle(style)</h3>
+<p>修改单条连线样式，优先级高于设计器统一配置。</p>
+<pre>link.setStyle({
+  stroke: '#f5222d',
+  strokeWidth: 3
+});</pre>
+<p><a class="demo-link" href="demo/link-style.html">→ 查看 Demo</a></p>
+
+<h3><span class="tag tag-method">方法</span> link.setReadonly(boolean)</h3>
+<p>设置单条连线为只读/可编辑。</p>
+
+<h3><span class="tag tag-method">方法</span> link.setContextMenu(items)</h3>
+<p>自定义单条连线的右键菜单。</p>
+
+<h3><span class="tag tag-method">方法</span> link.resetPath()</h3>
+<p>重置连线路径（重新自动计算路由）。</p>
+
+<h3><span class="tag tag-method">方法</span> link.delete()</h3>
+<p>删除连线。</p>
+
+<!-- ═══════ 五、事件 ═══════ -->
+<h2 id="events">五、事件</h2>
+
+<table>
+<tr><th>事件名</th><th>触发时机</th><th>回调参数</th></tr>
+<tr><td><span class="tag tag-event">事件</span> onNodeCreated</td><td>节点创建完成</td><td>{id, name, type}</td></tr>
+<tr><td><span class="tag tag-event">事件</span> onNodeDeleted</td><td>节点删除完成</td><td>{id, name, type}</td></tr>
+<tr><td><span class="tag tag-event">事件</span> onLinkCreated</td><td>连线创建完成</td><td>{id, startNodeId, endNodeId}</td></tr>
+<tr><td><span class="tag tag-event">事件</span> onLinkDeleted</td><td>连线删除完成</td><td>{id, startNodeId, endNodeId}</td></tr>
+<tr><td><span class="tag tag-event">事件</span> onContextMenuClick</td><td>右键菜单点击</td><td>{targetType, targetId, menuName}</td></tr>
+</table>
+<p><a class="demo-link" href="demo/node-events.html">→ 查看节点事件 Demo</a> &nbsp;|&nbsp; <a class="demo-link" href="demo/link-events.html">→ 查看连线事件 Demo</a></p>
+
+<!-- ═══════ 六、数据格式 ═══════ -->
+<h2 id="data-format">六、数据格式</h2>
+
+<p>exportJSON / importJSON 使用的 JSON 格式：</p>
+<pre>{
+  "nodes": [
+    {
+      "id": "guid",
+      "type": "start | end | userTask | systemTask | gateway",
+      "name": "节点名称",
+      "x": 100,
+      "y": 200,
+      "style": null
+    }
+  ],
+  "links": [
+    {
+      "id": "guid",
+      "startNodeId": "guid",
+      "startAnchorPos": "top | bottom | left | right",
+      "endNodeId": "guid",
+      "endAnchorPos": "top | bottom | left | right",
+      "remark": "条件说明",
+      "style": null
+    }
+  ]
+}</pre>
+
+</div>
+</body>
+</html>

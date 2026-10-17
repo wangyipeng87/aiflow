@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>Demo - 根据ID获取连线</title>
+<link href="../Content/css/aiflow.css" rel="stylesheet"/>
+<script src="../Content/es6/raphael.min.js"></script>
+<script src="../Content/es6/aiflow-router.js"></script>
+<script type="module" src="../Content/es6/index.js"></script>
+<style>.demo-panel{position:fixed;top:10px;right:60px;z-index:999;background:#fff;padding:12px 16px;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.15);font-size:13px;max-width:360px;} .demo-panel h4{margin:0 0 8px;font-size:14px;color:#1890ff;} .demo-btn{padding:6px 14px;background:#1890ff;color:#fff;border:none;border-radius:4px;cursor:pointer;margin:4px 2px;} .demo-btn:hover{background:#40a9ff;} #result{margin-top:8px;background:#f5f5f5;padding:8px;border-radius:4px;font-size:12px;white-space:pre;}</style>
+</head>
+<body>
+<div id="aiflow-page"></div>
+<div class="demo-panel">
+  <h4>根据ID获取连线 Demo</h4>
+  <p>已预创建一条连线，点击按钮获取信息。</p>
+  <button class="demo-btn" id="btn-get">获取连线</button>
+  <div id="result"></div>
+</div>
+<script type="module">
+import { AiFlow } from '../Content/es6/index.js';
+
+var designer = AiFlow.init(document.getElementById('aiflow-page'), { title: '获取连线Demo' });
+  var n1 = designer.addNode('start', 250, 100);
+  var n2 = designer.addNode('userTask', 230, 280, { name: '处理任务' });
+  var link = designer._addLink(n1.id, 'bottom', n2.id, 'top');
+
+  document.getElementById('btn-get').addEventListener('click', function(){
+    if (!link) { document.getElementById('result').textContent = '无连线'; return; }
+    var l = designer.getLinkById(link.id);
+    if (l) {
+      document.getElementById('result').textContent = 'ID: ' + l.id + '\n起始节点: ' + l.startNodeId + '\n结束节点: ' + l.endNodeId + '\n备注: ' + (l.remark || '(空)');
+    } else {
+      document.getElementById('result').textContent = '未找到连线';
+    }
+  });
+</script>
+</body>
+</html>
