@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="notranslate">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>流程设计器</title>
+  <link href="Content/css/aiflow.css" rel="stylesheet"/>
+  <script src="Content/es6/raphael.min.js"></script>
+  <script src="Content/es6/aiflow-router.js"></script>
+  <script type="module" src="Content/es6/index.js"></script>
+</head>
+<body>
+  <div id="aiflow-page"></div>
+  <script type="module">
+    import { AiFlow } from './Content/es6/index.js';
+
+    AiFlow.init(document.getElementById('aiflow-page'), {
+      events: {
+        onNodeCreated: function (data) { console.log('节点创建:', data); },
+        onNodeDeleted: function (data) { console.log('节点删除:', data); },
+        onLinkCreated: function (data) { console.log('连线创建:', data); },
+        onLinkDeleted: function (data) { console.log('连线删除:', data); },
+        onContextMenuClick: function (data) { console.log('菜单点击:', data); }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -54,8 +54,8 @@ npx serve .
 
 启动后访问：
 
-- 项目主页：<http://localhost:8080/home.html>
-- 设计器主页面：<http://localhost:8080/index.html>
+- 项目主页：<http://localhost:8080/index.html>
+- 设计器主页面：<http://localhost:8080/designer.html>
 - 接口文档：<http://localhost:8080/interface.html>
 - 示例页面：<http://localhost:8080/demo/init.html>
 
@@ -303,8 +303,8 @@ AiFlow.init(container, {
 │   │   └── raphael.min.js          # Raphael 运行库
 │   └── img/
 ├── demo/                            # 功能示例
-├── home.html                        # 项目介绍主页
-├── index.html                       # 设计器主页面
+├── index.html                        # 项目介绍主页
+├── designer.html                       # 设计器主页面
 ├── interface.html                   # 接口文档
 ├── LICENSE                          # Apache License 2.0
 └── README.md
