@@ -29,6 +29,10 @@ AiFlow 是一个基于原生 ES6 和 Raphael 的轻量级流程设计器，支�
 - CSS3
 - 无 jQuery、无前端框架、无构建工具
 
+## 在线体验
+
+- 在线体验：<https://wangyipeng87.github.io/aiflow/>
+
 ## 快速开始
 
 ### 1. 克隆项目
