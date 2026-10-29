@@ -31,7 +31,7 @@ AiFlow 是一个基于原生 ES6 和 Raphael 的轻量级流程设计器，支�
 
 ## 在线体验
 
-- 在线体验：<https://wangyipeng87.github.io/aiflow/>
+- 在线体验： <a href="https://wangyipeng87.github.io/aiflow/" target="_blank">https://wangyipeng87.github.io/aiflow/</a>
 
 ## 快速开始
 
